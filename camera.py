@@ -53,11 +53,9 @@ class CameraHandler:
         thresh1 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
         return thresh1
     
-    def showPhoto(self, img, title = "photo"):
-        cv2.imshow("photo", img)
-        time.sleep(1)
+    def savePhoto(self, img, title = "photo"):
         cv2.imwrite(f"camera_{title}.jpg", img)
-        cv2.destroyAllWindows()
+
 
     def erode(self, img, time):
         kernel = np.ones((5,5), np.uint8)
@@ -146,7 +144,7 @@ class CameraAdapter:
                 
             elements.append([x, y,pieceType])
 
-        # self.camera.showPhoto(plotImg, title="positions")
+        self.camera.savePhoto(plotImg, title="positions")
                 
         return self.orderElements(elements)
 
@@ -162,29 +160,29 @@ class CameraAdapter:
 
     def getTableMask(self, img, threshhold):
         gray = self.camera.convertToGray(img)
-        # self.camera.showPhoto(gray, title="gray_mask")
+        self.camera.savePhoto(gray, title="gray_mask")
         binary = self.camera.convertToBinary(gray, threshhold=threshhold)
-        # self.camera.showPhoto(binary, title="binary_mask")
+        self.camera.savePhoto(binary, title="binary_mask")
         
 
         dilatated = self.camera.dilate(binary, 50)
-        #  self.camera.showPhoto(dilatated, title="dilatated_mask")
+        self.camera.savePhoto(dilatated, title="dilatated_mask")
         eroded = self.camera.erode(dilatated, 50)
-        #  self.camera.showPhoto(eroded, title="eroded_mask")
+        self.camera.savePhoto(eroded, title="eroded_mask")
         mask = cv2.cvtColor(eroded, cv2.COLOR_GRAY2BGR)
         
         return mask
     
     def getPositions(self, img):
         gray = self.camera.convertToGray(img)
-        # self.camera.showPhoto(gray, title="gray_table")
+        self.camera.savePhoto(gray, title="gray_table")
         binary = self.camera.convertToBinary(gray)
-        # self.camera.showPhoto(binary, title="binary_table")
+        self.camera.savePhoto(binary, title="binary_table")
         dilatated = self.camera.dilate(binary, 13)
 
-        # self.camera.showPhoto(dilatated, title="dilatated_table")
+        self.camera.savePhoto(dilatated, title="dilatated_table")
         eroded = self.camera.erode(dilatated, 13)
-        # self.camera.showPhoto(eroded, title="eroded_table")
+        self.camera.savePhoto(eroded, title="eroded_table")
         img = cv2.bitwise_not(eroded)
         contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
@@ -214,7 +212,7 @@ class CameraAdapter:
             mask = self.getTableMask(img, threshhold)
             img = self.mask(img, mask)
             
-            self.camera.showPhoto(img, title="mask")
+            self.camera.savePhoto(img, title="mask")
             positions = self.getPositions(img)
 
             blob_count = len(positions)
@@ -223,7 +221,7 @@ class CameraAdapter:
             
             img = copy.deepcopy(self.table)
             img = self.drawRectangle(img, positions)
-            self.camera.showPhoto(img, title="table")
+            self.camera.savePhoto(img, title="table")
 
             if blob_count == POSITION_NUMBER:
                 found = True
