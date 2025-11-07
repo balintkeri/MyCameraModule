@@ -51,8 +51,8 @@ class CameraHandler:
         return thresh1
     
     def showPhoto(self, img, title = "photo"):
-        #cv2.imshow("photo", img)
-        #time.sleep(5)
+        cv2.imshow("photo", img)
+        time.sleep(1)
         cv2.imwrite(f"camera_{title}.jpg", img)
         cv2.destroyAllWindows()
 
@@ -143,7 +143,7 @@ class CameraAdapter:
                 
             elements.append([x, y,pieceType])
 
-        self.camera.showPhoto(plotImg, title="positions")
+        # self.camera.showPhoto(plotImg, title="positions")
                 
         return self.orderElements(elements)
 
@@ -159,29 +159,29 @@ class CameraAdapter:
 
     def getTableMask(self, img, threshhold):
         gray = self.camera.convertToGray(img)
-        self.camera.showPhoto(gray, title="gray_mask")
+        # self.camera.showPhoto(gray, title="gray_mask")
         binary = self.camera.convertToBinary(gray, threshhold=threshhold)
-        self.camera.showPhoto(binary, title="binary_mask")
+        # self.camera.showPhoto(binary, title="binary_mask")
         
 
         dilatated = self.camera.dilate(binary, 50)
-        self.camera.showPhoto(dilatated, title="dilatated_mask")
+        #  self.camera.showPhoto(dilatated, title="dilatated_mask")
         eroded = self.camera.erode(dilatated, 50)
-        self.camera.showPhoto(eroded, title="eroded_mask")
+        #  self.camera.showPhoto(eroded, title="eroded_mask")
         mask = cv2.cvtColor(eroded, cv2.COLOR_GRAY2BGR)
         
         return mask
     
     def getPositions(self, img):
         gray = self.camera.convertToGray(img)
-        self.camera.showPhoto(gray, title="gray_table")
+        # self.camera.showPhoto(gray, title="gray_table")
         binary = self.camera.convertToBinary(gray)
-        self.camera.showPhoto(binary, title="binary_table")
+        # self.camera.showPhoto(binary, title="binary_table")
         dilatated = self.camera.dilate(binary, 13)
 
-        self.camera.showPhoto(dilatated, title="dilatated_table")
+        # self.camera.showPhoto(dilatated, title="dilatated_table")
         eroded = self.camera.erode(dilatated, 13)
-        self.camera.showPhoto(eroded, title="eroded_table")
+        # self.camera.showPhoto(eroded, title="eroded_table")
         img = cv2.bitwise_not(eroded)
         contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
