@@ -173,10 +173,10 @@ class CameraAdapter:
         
         return mask
     
-    def getPositions(self, img):
+    def getPositions(self, img, threshhold):
         gray = self.camera.convertToGray(img)
         self.camera.savePhoto(gray, title="gray_table")
-        binary = self.camera.convertToBinary(gray)
+        binary = self.camera.convertToBinary(gray, threshhold=threshhold)
         self.camera.savePhoto(binary, title="binary_table")
         dilatated = self.camera.dilate(binary, 13)
 
@@ -213,7 +213,7 @@ class CameraAdapter:
             img = self.mask(img, mask)
             
             self.camera.savePhoto(img, title="mask")
-            positions = self.getPositions(img)
+            positions = self.getPositions(img, threshhold)
 
             blob_count = len(positions)
             print(f"Threshold: {threshhold}")
