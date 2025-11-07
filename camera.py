@@ -7,10 +7,31 @@ import time
 POSITION_NUMBER = 24
 
 
+class SandbergCamera():
+    def __init__(self):
+        self.cam = cv2.VideoCapture(0)
+        if not self.cam.isOpened():
+            print("❌ Cannot open camera")
+            exit()
+
+    def take_photo(self, filename):
+        ret, frame = self.cam.read()
+
+        if ret:
+            # Save the image
+            cv2.imwrite(filename, frame)
+            print(f"✅ Image saved as {filename}")
+        else:
+            print("❌ Failed to capture image")
+
+        self.cam.release()
 
 class CameraHandler:
     def __init__(self):
-        self.cam = Camera()
+        try:
+            self.cam = Camera()
+        except:
+            self.cam = SandbergCamera()
 
     def getPhoto(self, first = True):
         self.cam.take_photo("camera.jpg")
