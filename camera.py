@@ -176,7 +176,7 @@ class CameraAdapter:
     def getPositions(self, img, threshhold):
         gray = self.camera.convertToGray(img)
         self.camera.savePhoto(gray, title="gray_table")
-        binary = self.camera.convertToBinary(gray, threshhold=threshhold)
+        binary = self.camera.convertToBinary(gray, threshhold=110)
         self.camera.savePhoto(binary, title="binary_table")
         dilatated = self.camera.dilate(binary, 13)
 
@@ -224,12 +224,15 @@ class CameraAdapter:
             self.camera.savePhoto(img, title="table")
 
             if blob_count == POSITION_NUMBER:
-                found = True
                 self.positions = positions
                 print("Found table")
+                counter +=1
+                if counter >= 3:
+                    found = True
             elif blob_count > POSITION_NUMBER:
                 raise Exception("Too many blobs found")
             else:
+                counter = 0
                 if threshhold == 0:
                     print("No table found")
                     raise Exception("No table found")
