@@ -9,7 +9,10 @@ POSITION_NUMBER = 24
 
 class SandbergCamera():
     def __init__(self):
-        self.cam = cv2.VideoCapture(0)
+        self.cam = cv2.VideoCapture(0, cv2.CAP_V4L2)
+
+        # Force YUYV color format instead of MJPG
+        self.cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'YUYV'))
         if not self.cam.isOpened():
             print("❌ Cannot open camera")
             exit()
