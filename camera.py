@@ -205,7 +205,6 @@ class CameraAdapter:
         self.table = self.camera.getPhoto()
         found = False
         threshhold = 250
-        counter = 0
 
         while not found:
             img = copy.deepcopy(self.table)
@@ -226,9 +225,7 @@ class CameraAdapter:
             if blob_count == POSITION_NUMBER:
                 self.positions = positions
                 print("Found table")
-                counter +=1
-                if counter >= 3:
-                    found = True
+                found = True
             elif blob_count > POSITION_NUMBER:
                 raise Exception("Too many blobs found")
             else:
